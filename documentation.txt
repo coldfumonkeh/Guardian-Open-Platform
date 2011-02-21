@@ -1,0 +1,116 @@
+Name: Guardian Open Platform CFC
+Purpose: A ColdFusion wrapper, for use with the Guardian Open Platform API
+Author: Matt Gifford (aka ColdFuMonkeh http://www.mattgifford.co.uk/)
+Date: Tuesday March 10th, 2009
+Version: 1.1
+Blog page: http://www.mattgifford.co.uk/guardianopenplatform/
+
+Revision History:
+
+17th August 2010 - 
+	v 1.1 Substantial updates:
+		- updated the API to handle JSON return format
+		- revised arguments / parameters sent into each public method
+		- added Section search method to return list of available sections within the API
+		- added parse output option to init constructor method
+		
+10th March 2009
+	v 1.0 Initial release
+	
+OBTAINING AN API KEY:
+=============================================
+
+You can obtain an API key for the service from the following location: http://guardian.mashery.com/ 
+(if you already have an account through another mashery service, you can login instead of registering a new account)
+	
+	
+DETAILS:
+=============================================
+
+I wrote this tag-based CFC wrapper to access the Guardian Open Platform API (details and spec can be found here http://www.guardian.co.uk/open-platform)
+
+Creating/initiating the CFC: (where __api__key__ is your API key to access the service)
+
+	Example:
+	
+	<cfset openPlatform = 
+				createObject(
+					"component", 
+					"com.coldfumonkeh.guardian.openAPI"
+				)
+				.init(
+					apikey='__api__key__',
+					parseOutput=false	
+				) />
+
+
+That's it. You are ready to go.
+Easy!
+
+
+EXAMPLES:
+============================================
+
+
+<cfset openResults = openAPI.search(q='environment') /> - all content mentioning "environment"
+
+
+<!---
+	All content mentioning "iPhone" published after and including 17th August 2010, returned in JSON format.
+--->
+<cfset openResults = openAPI.search(
+						q='iPhone',
+						format='json',
+						fromdate='2010-08-17'
+					) /> 
+
+<!---
+	All keywords containing "Katy Perry", returned in JSON format.
+--->
+<cfset openResults = openAPI.tags(
+						q='Katy Perry',
+						format='json'
+					) />
+
+
+<!---
+	Returning specific content based upon the item ID, returned in XML format, showing related content.
+--->
+<cfset openResults = openAPI.item(
+						itemID='music/series/whats-in-katy-perrys-hand', 
+						format='xml', 
+						showrelated=true, 
+						showtags='all'
+					) />
+
+
+<!---
+	Obtain a list of available sections within the API.
+--->
+<cfset openResults = openAPI.sections(format='json') />
+
+
+OUTPUT:
+=============================================
+
+All methods currently return the data as either XML (default) or JSON.
+
+
+NOTES
+=============================================
+
+The only location of hard coded data within any of the components is in the API.cfc within the init function.
+
+<cfset variables.instance.rootURL = 'http://api.guardianapis.com/content/' />
+
+This is the location/path used by the API to access the remote methods.
+
+
+FEEDBACK AND GOODBYES
+=============================================
+
+If you have any feedback, comments or questions, please feel free to post on project page:	http://www.mattgifford.co.uk/guardianopenplatform/
+
+Many thanks,
+
+Matt Gifford
